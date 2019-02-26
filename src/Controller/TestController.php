@@ -15,13 +15,13 @@ class TestController extends AbstractController {
   */
   public function index()
   {
-    $ms = $this->getDoctrine()->getRepository(Movie::class)->findAll;
+    $ms = $this->getDoctrine()->getRepository(Movie::class)->findAll();
     return $this->render('test/index.html.twig', [
       "ms" => $ms
     ]);
   }
     /**
-     * fonction fète pr tester ds trucs
+     * fonction faites pour effectuer des tests
      * @Route("/test", name="test")
      */
     public function test()
@@ -38,7 +38,7 @@ class TestController extends AbstractController {
 
 
     /**
-     * @Route("/single/{id}", name="index")
+     * @Route("/single/{id}", name="single")
      */
     public function show(Movie $a)
     {
@@ -48,7 +48,7 @@ class TestController extends AbstractController {
     }
 
     /**
-     * @Route("/evaluation/{id}", name="index")
+     * @Route("/evaluation/{id}", name="evaluation")
      * @Isgranted("ROLE")
      */
     public function rate(Movie $b, Request $c)
