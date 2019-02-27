@@ -5,6 +5,8 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+Use App\Entity\User;
+Use Faker;
 
 class UserFixtures extends Fixture
 {
@@ -22,6 +24,8 @@ class UserFixtures extends Fixture
         $user = new User();
         $user->setUsername($faker->lastName);
         $user->setPassword($this->passwordEncoder->encodePassword($user,"password$i"));
+        $manager->persist($user);
+
       }
         $manager->flush();
     }

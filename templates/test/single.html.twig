@@ -1,9 +1,24 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}{{ a.title }}{% endblock %}
+{% block title %}{{ movie.title }}{% endblock %}
 
-{% block pageTitle %} {{ a.title }} {% endblock %}
+{% block pageTitle %} {{ movie.title }} {% endblock %}
 
 {% block main %}
-
+<div>
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><strong>Titre :</strong>{{ movie.title }}</p>
+          <p class="card-text"><strong>Auteur :</strong>{{ movie.author }}</p>
+          <p class="card-text"><strong>Catégorie :</strong> {{ movie.type }}</p>
+          <p class="card-text"><strong>Date de sortie :</strong> {{ movie.releaseYear|date("d-m-Y") }}</p>
+          <p class="card-text"><strong>Synopsis :</strong> {{ movie.sumary }}</p>
+          {% for evaluation in movie.evaluations %}
+            <p class="card-text"><strong>Note moyenne :</strong> {{ evaluation.grade }}</p>
+            <p class="card-text"><strong>Critiques :</strong> {{ evaluation.comment }}</p>
+          {% endfor %}
+      </div>
+    </div>
+    <a href="{{ path('index') }}" class="btn btn-primary">Retour</a>
+</div>
 {% endblock %}
