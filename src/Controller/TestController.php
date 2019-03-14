@@ -4,10 +4,13 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\User;
 use App\Entity\Movie;
 use App\Entity\Evaluation;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class TestController extends AbstractController {
   /**
@@ -15,48 +18,48 @@ class TestController extends AbstractController {
   */
   public function index()
   {
-    $ms = $this->getDoctrine()->getRepository(Movie::class)->findAll;
+    $movies = $this->getDoctrine()->getRepository(Movie::class)->findAll();
     return $this->render('test/index.html.twig', [
-      "ms" => $ms
+      "movies" => $movies
     ]);
   }
+    // /**
+    //  * fonction faites pour effectuer des tests
+    //  * @Route("/test", name="test")
+    //  */
+    // public function test()
+    // {
+    //     $ms = $this->getDoctrine()->getRepository(Movie::class)->findAll();
+    //     //fonction qui essé de calc moyen note flm mais prblm
+    //     for ($i=0; $i < count($ms) ; $i) {
+    //       $notes = $ms[$i]->getEvaluations()->getGrade();
+    //     }
+    //     return $this->render('test/index.html.twig', [
+    //       "ms" => $ms
+    //     ]);
+    // }
+
+
     /**
-     * fonction fète pr tester ds trucs
-     * @Route("/test", name="test")
+     * @Route("/single/{id}", name="single")
      */
-    public function test()
+    public function show(Movie $movie)
     {
-        $ms = $this->getDoctrine()->getRepository(Movie::class)->findAll();
-        //fonction qui essé de calc moyen note flm mais prblm
-        for ($i=0; $i < count($ms) ; $i) {
-          $notes = $ms[$i]->getEvaluations()->getGrade();
-        }
-        return $this->render('test/index.html.twig', [
-          "ms" => $ms
+        return $this->render('test/single.html.twig', [
+          "movie" => $movie
         ]);
     }
 
-
     /**
-     * @Route("/single/{id}", name="index")
-     */
-    public function show(Movie $a)
-    {
-        return $this->render('single.html.twig', [
-          "a" => $a
-        ]);
-    }
-
-    /**
-     * @Route("/evaluation/{id}", name="index")
+     * @Route("/evaluation/{id}", name="evaluation")
      * @Isgranted("ROLE")
      */
-    public function rate(Movie $b, Request $c)
+    public function rate(Movie $movie, Request $request)
     {
-        $d = new Evaluation();
+        $evaluation = new Evaluation();
 
-        $form = $this->createFormBuilder($d)
-            ->add('comment')
+        $form = $this->createFormBuilder($evaluation)
+            ->add('comment', TextareaType::class)
             ->add('grade')
             ->add('save', SubmitType::class)
             ->getForm();
@@ -64,15 +67,15 @@ class TestController extends AbstractController {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-          $d.setMovie($b);
-          $d.setUser($u);
+          $evaluation->setMovie($movie);
+          $evaluation->setUser($user);
           $entityManager = $this->getDoctrine()->getManager();
-          $entityManager->persist($d);
+          $entityManager->persist($evaluation);
           $entityManager->flush();
         }
 
         return $this->render('test/evaluation.html.twig', [
-          "b" => $b,
+          "movie" => $movie,
           "form" => $form->createView()
         ]);
     }
